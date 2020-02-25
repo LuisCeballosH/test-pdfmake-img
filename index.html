@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="pdfmake/build/pdfmake.min.js"></script>
+    <script src="pdfmake/build/vfs_fonts.js"></script>
+</head>
+
+<body>
+    <button onclick="pdf()">PDF</button>
+
+    <script>
+        function toDataURL(src) {
+            return new Promise((resolve, reject) => {
+                var img = new Image();
+                img.onload = function () {
+                    var canvas = document.createElement('CANVAS');
+                    var ctx = canvas.getContext('2d');
+                    var dataURL;
+                    canvas.height = this.naturalHeight;
+                    canvas.width = this.naturalWidth;
+                    ctx.drawImage(this, 0, 0);
+                    dataURL = canvas.toDataURL();
+                    resolve(dataURL);
+                };
+                img.src = src
+            });
+        }
+
+        async function pdf(params) {
+            let dataURL = await toDataURL('img/test/descarga.jpg');
+            console.log(dataURL);
+
+            const documentDefinition = {
+                content: [
+                    {
+                        image: dataURL,
+                        width: 150
+                    }
+                ]
+            }
+            pdfMake.createPdf(documentDefinition).print();
+        }
+    </script>
+
+</body>
+
+</html>
